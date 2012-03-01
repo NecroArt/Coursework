@@ -1,0 +1,191 @@
+Content-Type: multipart/related; start=<op.mhtml.1330613469635.ba1f0d625f7a6dc8@192.168.0.5>; boundary=----------68n3px6PqLDDj9A979gNmr
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/binimage.htm
+Subject: =?utf-8?Q?Glossary=20-=20Binary=20Images?=
+MIME-Version: 1.0
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=binimage.htm
+Content-Type: text/html; name=binimage.htm
+Content-ID: <op.mhtml.1330613469635.ba1f0d625f7a6dc8@192.168.0.5>
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/binimage.htm
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HEAD>
+<TITLE>Glossary - Binary Images</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<IMG SRC="logo.gif" alt="" align="right"><A HREF="hipr_top.htm"><IMG ALT="home" SRC="home.gif"></A>
+<A HREF="colimage.htm"><IMG ALT="right" SRC="right.gif"></A>
+<A HREF="glossary.htm"><IMG ALT="up" SRC="up.gif"></A>
+<BR CLEAR=right><BR><CENTER><IMG ALT="---" SRC="line2.gif" WIDTH="75%" HEIGHT="4"></CENTER><BR> <A NAME="1"><IMG ALT="" SRC="mote.gif"></A><H1>Binary
+Images</H1> 
+
+<P>Binary images are images whose <A HREF="pixel.htm">pixels</A> have only two
+possible <A HREF="value.htm">intensity values</A>. They are normally displayed as
+black and white. Numerically, the two values are often 0 for black,
+and either 1 or 255 for white.
+
+<P>Binary images are often produced by <A HREF="threshld.htm">thresholding</A> a
+<A HREF="gryimage.htm">grayscale</A> or <A HREF="colimage.htm">color image</A>, in order to
+separate an object in the image from the background. The color of the
+object (usually white) is referred to as the <EM>foreground color</EM>.
+The rest (usually black) is referred to as the <EM>background
+color</EM>. However, depending on the image which is to be thresholded,
+this <A NAME="2"><IMG ALT="" SRC="mote.gif"></A><EM>polarity</EM> might be inverted, in which case the object is
+displayed with 0 and the background is with a non-zero value.
+
+<P>Some <A HREF="morops.htm">morphological</A> operators assume a certain polarity
+of the binary input image so that if we process an image with inverse
+polarity the operator will have the opposite effect. For example, if
+we apply a <A HREF="close.htm">closing</A> operator to a black text on white
+background, the text will be <A HREF="open.htm">opened</A>.
+
+<P><P><CENTER><IMG ALT="---" SRC="line2.gif" WIDTH="75%" HEIGHT="4"></CENTER><BR>
+<P>
+<A HREF="copyrght.htm">&copy;2003 R.&nbsp;Fisher, S.&nbsp;Perkins, 
+A.&nbsp;Walker and E.&nbsp;Wolfart.</A><BR>
+<P><A HREF="http://validator.w3.org/">
+         <IMG BORDER=0 SRC="vh40.gif" ALT="Valid HTML 4.0!" HEIGHT=31 WIDTH=88></A>
+</BODY>
+</HTML>
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=logo.gif
+Content-Type: image/gif; name=logo.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/logo.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODlhRgAqAPH/AADX/01k5NEAAP///yH5BAEAAP8ALAAAAABGACoAAAL+nI+p
+y+0Po5y0MoCz3rxb2oXiOH4HiaYqJq3uizZvQNf2jefvMub+DwyKFJug8Yi0cRKa
+pPPp2zAx0Ko1oJkCrtxkFpFRUsVb7DhE5ngzWvItbC6Lar2a4H5/s8FjGpx+FogW
+N4hnmNYGWKboJ+gWl0ZjeNjIwrcI+Qj3l8mZmScJSphYqSfnyJjJiGcn+nXSR9hR
+qtoZW9sqoAhAKqtmO1iHw1rJe5k2C/zr2zQsOnqcmrqZXLycq7vb60l9imkaiW1q
+DIvJjer5WJyrs1euTtv9c15GjPNqwEkffwv/OenKXb5Y+4DNuxUGICV8A/QhRNdP
+WimFxBim64JxXK89jBy1ResIEtq7kCAtXiRZRcqlZiifhCAyp+XBITxgsBRik6GW
+nDxVgOgJVKeJoD5NGC1H86jSpUybOjVRAAA7
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=home.gif
+Content-Type: image/gif; name=home.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/home.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODdhKAAoAMIAAOfn525ubr6+vgAAAAAA/wAAAAAAAAAAACwAAAAAKAAoAAAD
+2Ai63P5whUgrDBOIzbv/YIgpAmaeaKqm2tiGcOy1WSnfME0G+DYMPYHuhRsQCEDc
+0HYzHpHKUo3n+f18z2cytqR2nEBn9rgNdT9g8ZjMle7Q5PW6PHMTv/I8FHSu6vN0
+G314f3KBg1iFgHUuTImKixyDapCGknZMVpSVSFaCmF6PnGwdiAKblXSmqJCqoH6j
+WoxTsLF7l42hp7akuLSEtq65tbHCvxysisZvwMWzzMi8t5/DzaPLd6LXz9mnmt/g
+4NyOQT2m5TJLFusRmOjvIyvy8/T19vcYCQA7
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=right.gif
+Content-Type: image/gif; name=right.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/right.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODdhKAAoAPIAAAAAAAAA/wCYAG5ubr6+vufn5wAAAAAAACwAAAAAKAAoAAAD
+4Fi63P5wjUgrHLOQzbv/YIgpBGaeaKqm2tiGcOy1WSnfME0OeD+XNd4HQPSBdK8O
+USAAGD9I22bJLD47USEBwKw6r5wsh9u1ggniaTnwPae36zb4TQYE2OcNvXrHh+RH
+QDtjTX1+IGaBLlJwdoaAY4dQgklTjo+QjpB6lIxbhqBEbZebb5+gqKKXkpyLWlOo
+sbGApqeyt3dytba4sm27W6u9fbqdrx6iw7k/rjeqz4+TzWCkikFnmiHAOHabrdfU
+3t+D1DLbeWHG6DHn6+3oURbyEZ3rNyMr+fr7/P3+GAkAADs=
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=up.gif
+Content-Type: image/gif; name=up.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/up.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODdhKAAoAMIAAOfn525ubr6+vgAAAAAA/wCYAAAAAAAAACwAAAAAKAAoAAAD
+1Qi63P5whUgrDBOIzbv/YIgpAmaeaKqm2tiGcOy1WSnfME0G+DYMPYHuhRsQCEDc
+0HYzHpHKUo0ncz6hsiUVZr1ic9JdrOv9grTccjl5DhM/ZPWRPXMzPb98XP9ru+5p
+XnQhaFVrN4Vjh1l2W4FXg35TTYsxiY9PkR+XIXuIjZSCn3+OnZVgpKGZmnWphpCs
+HZwgXQMFsRyzcHO2t6OThr0FvoyuY8LDuBu6eMjElqBVw9PPqMBj1Mm/YlV8fcXX
+QT3M4oR2FugRduXsIyvv8PHy8/QYCQA7
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=line2.gif
+Content-Type: image/gif; name=line2.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/line2.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODdhHAIEAPcAAAAA/QAE/QAA/AAA+wAA+gAA+QAA+AAA9wAA9gAA9QAA9AAA
+8wAA8gAA8QAA8AAA7wAA7gAA7QAA7AAA6wAA6gAA6QAA6AAA5wAA5gAA5QAA5AAA
+4wAA4gAA4QAA4AAA3wAA3gAA3QAA3AAA2wAA2gAA2QAA2AAA1wAA1gAA1QAA1AAA
+0wAA0gAA0QAA0AAAzwAAzgAAzQAAzAAAywAAygAAyQAAyAAAxwAAxgAAxQAAxAAA
+wwAAwgAAwQAAwAAAvwAAvgAAvQAAvAAAuwAAugAAuQAAuAAAtwAAtgAAtQAAtAAA
+swAAsgAAsQAAsAAArwAArgAArQAArAAAqwAAqgAAqQAApwAApgAApQAApAAAowAA
+ogAAoQAAnwAAngAAnQAAnAAAmgAAmQAAmAAAlwAAlQAAlAAAkgAAkQAAkAAAjgAA
+jQAAiwAAigAAiAAAhwAAhQAAhAAAggAAgAAAfwAAfQAAewAAegAAeAAAdgAAdAAA
+cwAAcQAAbwAAbQAAawAAaQAAaAAAZgAAZAAAYgAAYAAAXgAAXAAAWgAAWAAAVgAA
+VAAAUgAAUAAATgAATAAASQAARwAARQAAQwAAQQAAPwAAPQAAOwABOAABNgABNAAB
+MgABMAABLQABKwABKQABJwABJAABIgABIAABHgABGwABGQABFwABFQABEgABEAAA
+DgAACwAACQQABwgABQUAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAACwAAAAAHAIEAAAI/gABAAgQQIBBgwMSKiTAkECBhw8NSDRw
+oKJFBBgxJtiYQIFHBQtCilzAoCSDBigbOFjJ0sGDlw8gyIQQoWYECThzSpjAcwKF
+nz8rCB1qoaiFC0iRYljKNIPTDBqiStWwoeoGDlg5dNjKtYOHrx4+iB0LomzZEGjT
+ili7doTbtyTikihBt4SJu3hNnNh7AoXfvyhSCE6horCKFYgRs1jMooXjxy4iu3hB
+mTKMyzBixJDBmfOMzzNoiKZRo3QNG6hvqL6BozWOHDl0yJa9YweP2zx69PDh44dv
+30CABBkeRIiQIUOIKC/CvIgRI0eOIEGSJIkSJUuyM9nOpEkTJ06e/jyBAiWKeSlS
+pkyhQqVKFStWrsjHgiVLFi1atmzhwqVLFy9efCEgGGCEEYYYYowxBhlklOGgGWac
+cQYaaKSRhhpqrLEGGxy20YYbbrzxBhxwxBGHHHLMoSIddNRRhx123HEHHnjkkYce
+OO6xBx989NGHH3788QcggARipCCCDDIIIYQUUoghhhxyCCJUJpKIIoossggjjDTS
+iCOOPCImJJBEEokkkkwyCSWUVOKmJZZccgkmmGSSiSaabLIJJ5x04qcnnnzyCSig
+hBKKKKKMoigppJRSiimmnHIKKqikkooqmK6yCiustNKKK6688gossMQSi0AEHYSQ
+Qgk15BBE/gVMRJFFFWWkEUcfgTRSSCadlFJLLMEU00w23aQTTj35BBQFQxFlVFJK
+MbXUU1BNFZVVV2XVFVdghTWWWGadlRZabLX1lltyzVVXXnjx1Rdgfg1GmGGJKcbY
+Y5BJVpllmGnWmWegjUaaaajZsBprrsE2G2224aYbb78BJxxxxiGnHBHNOQeddNRZ
+h5123HkHnnjkmRcFeuqx5x588l1Bn3346ceffwAK+AWBBiKoIIMOlgGhhBRaiKGG
+HLLhIYgikmgiiirOwaKLMMpIo4046qEjjz4CKSSRRgaCpJJMOgmllFQiYiWWWnLp
+JZhiPkKmmWiqyaablcApJ5124qkn/p9+dgKooIQaiqiiozDqKKSSUmoppqpoyqmn
+oIpKqqmoFqQqq602BGusE9Faq60cdfTRrryalJJKwLoE00w02XQssj0ty2yzFRh1
+FLTSTvuUtddalZVW23oF1rfghjsuueWei65cddnFrl58wRvvYIYdVi9jjeHbgmST
+7YtZZpv9C1poo5l2WmqrufZabAvXhltuu/UWcXDEFXdccss191x001V3XXZL4E53
+vhOe8ZTnPOlZT3veE5/51Oc++dlPf/4ToAEV6EAJWlCDHhShCVXoQhnaUIc+FKIR
+lehEKVpRi14UoxnV6EY52lGPfhSkIRXpSElaUpOeFKUpVelK/lnaUpe+FKYxlelM
+aVpTm94UpznV6U552lOf/hSoQRXqUIlaVKMeFalJVepSmdpUpz4VqlGV6lQDsdxB
+MDcAV21OVp47gK0QELpckY4kpvtV6oTFumK9biexWxbtavcs3OWOWryjiu+0Fbxu
+Ee8D4QLB8UJQLhEobwTpat7zoLcX6QWGevS63r20x719veB7/hJfwMpHMPSpRn0K
+a1/DbvMw+f2GfhS738Uytj+O+e9jAQwZAUl2wJMlUGUMbNnLICizCdbMgjnLIM84
+CLQPDk2ERiNh0k7INBVCrYVTg6HVZJi1GnINh2Db4dh8aDYgpm2IbDMi3JI4Nybe
+7Yl6GJNi3/5mRcFlsXBbRJwXFxfGx5FRcmcMCAA7
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=mote.gif
+Content-Type: image/gif; name=mote.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/mote.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+
+------------68n3px6PqLDDj9A979gNmr
+Content-Disposition: inline; filename=vh40.gif
+Content-Type: image/gif; name=vh40.gif
+Content-Location: http://homepages.inf.ed.ac.uk/rbf/HIPR2/vh40.gif
+Content-Transfer-Encoding: Base64
+
+R0lGODlhWAAfAPQAAP///zMzMzk5OUpKSmZmZoSEhJmZmczMzJkAAGYzAKWMZntz
+ZntmM+e9Y//MZsyZM72cShgYCPr//zGMtRBae7XW52OlxlqcvRh7rUqUvQBmmYS1
+1ufv9729xpkzZgAAACH5BAEAABIALAAAAABYAB8AAAX/4CGOZGmeaKqubCm97wHM
+dG3feO7sfO//wGDwkYDFcsgkUshsOndEo0SmrFaf2Cy0aKRavzgfBMJrjB3j9LiB
+XpfTDjPbF+2C7zbf58ODfAIOe4J7DIGEPAJ7gAwfhXRcMF54d3p8O36AY4wRbh8R
+njsNnn8OjI49dZE0GhgVMxUaExw0HBgat7gXMx0BAwccBTWVaYyAl6Q8f4xky6Sm
+P6lHMxkaG6+2rjMbtxjdt9Ydnx8DCxHCPYOCxmjIO39+Ag4RAZiljdCQ0gDbGTQX
+1TQsaLDAgcO/CQA4DPhAoMCnAeeSfSDWrl4yQJ+W1Xv2SIoXDqxmARCoK+EEDa5q
+/6EE0IHhjAMCOkR0Z4ndOovuMo2yaS8Ag59kHESbQuukNQ4nMcyCJQsAtZIGAnzM
+g64mTpyBAIm6tzGdIyIePKiisc0CgAq2Vm7TBWslgAIQl2iZy+RB2LD6zsbax2og
+B2rWqGnI4MpAMLl0E/sIiwABXkm1WgncgGECWqUcNkywJauDgSRCFMwBAmE0XcaN
+HXuQNHJw5b8a/vWjgbYaB5mIfTRYENSHAgLAFSRG3fixjW23zCIHWEPgbNBAFhDo
+XYYAb+mmnxBXnTdhWldtWx1ndeXHbwLZHfwmA4GA8CBhF3tIzb07bPFIYxUUyZfC
+Zxv/zfBDA8BN94N0PFgH3/9dPGyH11g1rBWQXxeI51RsBQQIgAEfzLSDdOsdSECC
+CwCBWnwOimWHDbBY88pKB23wD0owFcDBAQuM4+FvoqEnYoIF/JDifKmFlQ9RNiCV
+jUkpnYSLi+HMMw5/APgAnHTABdlDiO29Jx99RBbnwVCsJVQBfxwsmdkEhNVwAAED
+2EgVDwvUKV2d6hlIYAEQYLcgfUV6INSRZU5S3g/tBVWAezucx6gQ26m2hUeG4iEE
+ddlRB2mY8U26YqVfKJYFY516CiGoh4rqBIOoEIpqqKpiIWhHn74KXayJkQlAC7yi
+8MCvwAYr7LDEFmssoQEkq+yyzDbr7LMJRCvttNRWa+0HtdjmA4IUAgA7
+
+------------68n3px6PqLDDj9A979gNmr--
