@@ -1,21 +1,4 @@
-//#include <iostream>
-//#include <stdio.h>
-//#include "gd.h"
 
-//using namespace std;
-
-//int binarizate (file inputImage);
-
-//int main()
-//{
-//    cout << "Hello World!" << endl;
-//    return 0;
-//}
-
-//int binarizate (file inputImage)
-//{
-
-//}
 // Инклудим нужные библиотеки
  #include <src/gd.h>
  #include <src/gd.c>
