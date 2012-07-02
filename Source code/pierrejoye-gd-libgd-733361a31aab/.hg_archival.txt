@@ -1,0 +1,5 @@
+repo: 3554b4a6575c947e8ebcb7c7b972dcc88405c0f4
+node: 733361a31aab7fe1e5e58881ea87ece5ad787ed7
+branch: default
+latesttag: GD_2_0_34RC1
+latesttagdistance: 334
