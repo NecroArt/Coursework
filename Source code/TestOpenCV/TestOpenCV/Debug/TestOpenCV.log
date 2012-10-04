@@ -1,0 +1,25 @@
+﻿Build started 30.09.2012 15:24:37.
+     1>Project "D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\TestOpenCV\TestOpenCV.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\TestOpenCV.unsuccessfulbuild".
+       ClCompile:
+         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\TestOpenCV.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt TestOpenCV.cpp
+         TestOpenCV.cpp
+     1>d:\opencv2.3.1x32\build\include\opencv2\flann\logger.h(66): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>d:\opencv2.3.1x32\build\include\opencv2\flann\flann.hpp(233): warning C4996: 'cv::flann::Index_<T>': was declared deprecated
+                 d:\opencv2.3.1x32\build\include\opencv2\flann\flann.hpp(278) : see reference to class template instantiation 'cv::flann::Index_<T>' being compiled
+     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(112): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(119): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _itoa. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(867) : see declaration of 'itoa'
+     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(114): warning C4101: 'y1' : unreferenced local variable
+     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(114): warning C4101: 'ptr1' : unreferenced local variable
+     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(114): warning C4101: 'x1' : unreferenced local variable
+     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(173): error C4716: 'getWeightArc' : must return a value
+     1>Done Building Project "D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\TestOpenCV\TestOpenCV.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:04.51
