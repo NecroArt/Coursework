@@ -3,8 +3,19 @@
 
 using namespace std;
 
+//структура дуги
 struct Arch {
-	vector <CvPoint> point;
+	vector <CvPoint> points;
+};
+
+//структура скелета
+struct Skelet {
+	vector <Arch> arch;
+};
+
+struct TwoPoints {
+	CvPoint vertex;
+	CvPoint neighbor;
 };
 
 void rotateMask(IplImage *mask1);
@@ -14,7 +25,10 @@ void improveImageQuality (IplImage *src, IplImage *dst);
 //функци€ вычисл€ет вес дуги скелета, который определ€етс€ количеством пикселей, из которых состоит дуга
 int getWeightArc (CvPoint startPoint, CvPoint finishPoint);
 
-vector <Arch> getSkeletArc(IplImage *image);
+vector <Skelet> getSkelets(IplImage *image);
+bool findBlackPixelWithOneNeighbor (IplImage *tempImage, int &x_first_black_pixel, int &y_first_black_pixel);
+
+void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_vertex, int x_neighbor, int y_neighbor);
 
 IplImage *buildSkeleton (IplImage *inputImage) {
 	IplImage *outputImage = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 1);
@@ -35,7 +49,7 @@ IplImage *buildSkeleton (IplImage *inputImage) {
 		mask2Ptr[0] = 0; mask2Ptr[1] = 0; mask2Ptr[2] = 255;
 		mask2Ptr = (uchar*)(mask2->imageData + 2*mask2->widthStep);
 		mask2Ptr[0] = 128; mask2Ptr[1] = 0; mask2Ptr[2] = 128;
-
+		
 	for (int y = 0; y < (outputImage->height - 2); y++) {
 		uchar* imagePtr0 = (uchar*)(outputImage->imageData + y * outputImage->widthStep);
 		uchar* imagePtr1 = (uchar*)(outputImage->imageData + (y + 1) * outputImage->widthStep);
@@ -65,7 +79,7 @@ IplImage *buildSkeleton (IplImage *inputImage) {
 				}
 			}
 		}
-		for( int x=0; x < (mask2->width - 2); x++) {
+		for( int x=0; x < (outputImage->width - 2); x++) {
 			for (int iter = 1; iter <= 4; iter++) {
 				//mask2
 				uchar* maskPtr0 = (uchar*)(mask2->imageData);
@@ -175,142 +189,356 @@ int getWeightArc (CvPoint startPoint, CvPoint finishPoint, IplImage *image) {
 	return length;
 }
 
-vector <Arch> getSkeletArc(IplImage *image) {
-	vector <Arch> skeletArches;
+vector <Skelet> getSkelets(IplImage *image) {
+	vector <Skelet> skelets;
 	IplImage *tempImage = cvCloneImage(image);
-	bool black_pixel_is_find = false, second_black_pixel_is_found = false;
-	//int y, x;
-	int x_black, y_black;
-
-	do {
-		//поиск чЄрного пиксел€ в верхней строке
-		uchar* ptr = (uchar*) (tempImage->imageData);
-		uchar* ptr2 = (uchar*) (tempImage->imageData + tempImage->widthStep);
-		for(int x=0; (x < tempImage->width) && (black_pixel_is_find == false); x++ ) {
-			if (ptr[x] == 255) {
-				//0x1
-				//000
-				for (int i = -1; i < 2; i++) {
-					if (
-						((x + i) != -1) || 
-						((x + i) != (tempImage->width - 1))
-						) {
-						if (ptr [x + i] == 0) {
-							black_pixel_is_find = true;
-							x_black = x + i;
-							y_black = 0;
-						}
+	bool black_pixel_is_found, second_black_pixel_is_found = false;
+	int x_first_black_pixel, y_first_black_pixel;
+	
+	//пока есть пиксель, €вл€ющийс€ началом скелета
+	while (findBlackPixelWithOneNeighbor (tempImage, x_first_black_pixel, y_first_black_pixel)) {
+		Skelet currentSkelet;
+		vector <CvPoint> vertexMass;
+		vector <TwoPoints> vertexStack;
+		do {
+			int x_current_pixel = x_first_black_pixel, y_current_pixel = y_first_black_pixel;
+			bool single_black_neighbor_is_found;
+			
+			//создание дуги
+			vector <CvPoint> currentArch;
+				
+			//построение дуги
+			do {	
+				if (vertexStack.size() != 0) {
+					//извлечение вершины из стека
+					TwoPoints current2Points;
+					current2Points = vertexStack.back();
+					vertexStack.pop_back();
 					
-						if (ptr2 [x + i] == 0) {
-							if (black_pixel_is_find == true || second_black_pixel_is_found == true) {
-								second_black_pixel_is_found = true;
-							}
-							else {
-								black_pixel_is_find = true;
-								x_black = x + i;
-								y_black = 1;
-							}
-						}
-					}
-				}
-			}
-		}
+					CvPoint vertex = current2Points.vertex, neighbor = current2Points.neighbor;
+					
+					//добавление извлечЄнной вершины в дугу
+					currentArch.push_back(vertex);
 
-		if (black_pixel_is_find == false) {
-			//поиск чЄрного пиксел€ в левом столбце
-			for(int y = 1; (y < tempImage->height) && (black_pixel_is_find == false); y += 2 ) {
-				uchar* ptr = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
-				for(int x=0; (x < tempImage->width) && (black_pixel_is_find == false); x++ ) {
-					if (ptr[x] == 255) {
-						if (ptr[x+1] == 0) {
-							black_pixel_is_find = true;
-							x_black = x + 1;
-							y_black = 0;
-						}
-						else {
-							if ((uchar*) (tempImage->imageData + tempImage->widthStep)[x] == 0) {
-								black_pixel_is_find = true;
-								x_black = x;
-								y_black = 1;
-							}
-							else {
-								if (x != 0) {
-									if (ptr[x - 1] == 0) {
-										black_pixel_is_find = true;
-										x_black = x - 1;
-										y_black = 0;
+					//назначение координат €чейки "3" в качестве текущих координат
+					x_current_pixel = neighbor.x;
+					y_current_pixel = neighbor.y;
+				}
+				
+				//добавление координат текущей €чейки в дугу
+				CvPoint newPoint;
+				newPoint.x = x_current_pixel;
+				newPoint.y = y_current_pixel;
+				currentArch.push_back(newPoint);
+
+				//маркировка €чейки
+				uchar* ptr = (uchar*) (tempImage->imageData + y_current_pixel * tempImage->widthStep);
+				ptr[x_current_pixel] = 2;
+
+				//поиск следующего пиксел€
+				single_black_neighbor_is_found = false;
+				int x_neighbor, y_neighbor;
+				for (int y = -1; y < 2; y++) {
+					uchar* ptr = (uchar*) (tempImage->imageData + (y_current_pixel + y) * tempImage->widthStep);
+					for (int x = -1; x < 2; x++) {
+						if (x != 0 || y != 0) {
+							if (ptr[x_current_pixel + x] == 0) {
+								if ((single_black_neighbor_is_found == false) && (vertexStack.size() == 0)) {
+									x_neighbor = x_current_pixel + x;
+									y_neighbor = y_current_pixel + y;
+									single_black_neighbor_is_found = true;
+								}
+								else {
+									//если первый заход в условие
+									if (single_black_neighbor_is_found == true) {
+										//добавление текущей вершины графа дл€ первого соседа
+										addVertexAndPixel (vertexStack, x_current_pixel, y_current_pixel, x_neighbor, y_neighbor);
+
+										//установка маркера 3 у чЄрного соседа
+										uchar* cur_ptr = (uchar*) (tempImage->imageData + (y_neighbor) * tempImage->widthStep);
+										cur_ptr[x_neighbor] = 3;
+
+										single_black_neighbor_is_found = false;
 									}
+
+									//добавление текущей вершины графа дл€ текущего соседа
+									addVertexAndPixel (vertexStack, x_current_pixel, y_current_pixel, x_current_pixel + x, y_current_pixel + y);
+
+									//установка маркера 3 у чЄрного соседа
+									uchar* cur_ptr = (uchar*) (tempImage->imageData + (y_current_pixel + y) * tempImage->widthStep);
+									cur_ptr[x_current_pixel + x] = 3;
 								}
 							}
 						}
 					}
 				}
-			}
-		}
-		//поиск чЄрного пиксел€ в правом столбце
+				//закончен поиск следующего пиксел€
 
-		//поиск чЄрного пиксел€ в нижней строке
-	} while (black_pixel_is_find == true);
-	
-	//поиск пиксел€ с одним чЄрным соседом
-	for(int y=0; (y < tempImage->height) && (black_pixel_is_find == false); y += 2 ) {
-		uchar* ptr1 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
-		uchar* ptr2 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
-		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 2) * tempImage->widthStep);
-		for(int x=0; x < tempImage->width; x++ ) {
-			if (ptr1[x] == 0) {
-				black_pixel_is_find = true;
+				//если найдена €чейка с единственным чЄрным соседом, то его координаты принимаютс€ в качестве текущих
+				if (single_black_neighbor_is_found == true) {
+					x_current_pixel = x_neighbor;
+					y_current_pixel = y_neighbor;
 
-				//поиск единственного чЄрного соседа
-				bool black_neighbor_is_found = false, second_black_neighbor_is_found = false;
-				int x_neighbor = -1, y_neighbor = -1;
-				for (int h = y; h < (y+2); h++) {
-					uchar* ptr = (uchar*) (tempImage->imageData + h * tempImage->widthStep);
-					for (int w = (h == y? x+1: x); w < (x+2); w++) {
-						if (ptr[w] == 0) {
-							if (black_neighbor_is_found == false) {
-								black_neighbor_is_found = true;
-								x_neighbor = w;
-								y_neighbor = h;
-							}
-							else {
-								second_black_neighbor_is_found = true;
-							}
+				}
+				else {
+					//добавление координат текущей €чейки в массив вершин графа
+					CvPoint newVertex;
+					newVertex.x = x_current_pixel;
+					newVertex.y = y_current_pixel;
+					vertexMass.push_back(newVertex);
+				}
+			} while (single_black_neighbor_is_found == true);
+			
+			//добавление в скелет новой дуги
+			Arch newArch;
+			newArch.points = currentArch;
+			currentSkelet.arch.push_back(newArch);
+		} while (vertexStack.size() != 0);
+		skelets.push_back(currentSkelet);
+	}
+	return skelets;
+}
+bool findBlackPixelWithOneNeighbor (IplImage *tempImage, int &x_first_black_pixel, int &y_first_black_pixel)
+{
+	bool black_pixel_is_found = false, second_black_pixel_is_found = false;
+	uchar* ptr = (uchar*) (tempImage->imageData);
+	uchar* ptr2 = (uchar*) (tempImage->imageData + tempImage->widthStep);
+	for(int x=0; (x < tempImage->width) && (black_pixel_is_found == false); x++ ) {
+		if (ptr[x] == 255) {
+			for (int i = -1; (i < 2) && (second_black_pixel_is_found == false); i++) {
+				if (
+					((x + i) != -1) &&
+					((x + i) != tempImage->width)
+					) {
+					if (ptr [x + i] == 0) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x + i;
+							y_first_black_pixel = 0;
 						}
-						if (second_black_neighbor_is_found  = true) {
-							break;
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
 						}
 					}
-					if (second_black_neighbor_is_found  = true) {
-						break;
+					
+					if (ptr2 [x + i] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x + i;
+							y_first_black_pixel = 1;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
 					}
 				}
-				if (black_neighbor_is_found == true && second_black_neighbor_is_found  == false) {
-					CvPoint newPoint;
-					newPoint.x = x_neighbor;
-					newPoint.y = y_neighbor;
-					Arch currentArch;
-					currentArch.point.insert(newPoint);
-					uchar* ptr = (uchar*) (tempImage->imageData + y_neighbor * tempImage->widthStep);
-					ptr[x_neighbor] = 2;
-					//ищем следующего соседа
-					for (int h = x_neighbor; h < (x_neighbor + 2); h++) {
-						uchar* ptr = (uchar*) (tempImage->imageData + h * tempImage->widthStep);
-						for (int w = (h = x_neighbor? y_neighbor + 1 : y_neighbor); w < (y_neighbor + 2); w++) {
-							
-						}
-					}
-				}
 			}
-		}
-		if(black_pixel_is_find == true) {
-			break;
+			second_black_pixel_is_found = false;
 		}
 	}
 
+	//поиск чЄрного пиксел€ в левом столбце
+	for(int y = 1; (y < (tempImage->height - 1)) && (black_pixel_is_found == false); y++) {
+		uchar* ptr1 = (uchar*) (tempImage->imageData + (y - 1) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
+		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
+		{
+			if (ptr2[0] == 255) {
+				for (int x = 0; (x < 2) && (second_black_pixel_is_found == false); x++) {
+					if (ptr1[x] == 0) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y - 1;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+					if (ptr2[x] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+					if (ptr3[x] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y + 1;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+			}
+		}
+	}
 
-	cvReleaseImage(&tempImage);
-	return skeletArches;
+	//поиск чЄрного пиксел€ в правом столбце
+	for(int y = 1; (y < (tempImage->height - 1)) && (black_pixel_is_found == false); y++) {
+		uchar* ptr1 = (uchar*) (tempImage->imageData + (y - 1) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
+		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
+		{
+			if (ptr2[tempImage->width - 1] == 255) {
+				for (int x = tempImage->width - 2; (x < tempImage->width) && (second_black_pixel_is_found == false); x++) {
+					if (ptr1[x] == 0) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y - 1;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+					if (ptr2[x] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+					if (ptr3[x] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y + 1;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+			}
+		}
+	}
+	//поиск чЄрного пиксел€ в нижней строке
+	if (black_pixel_is_found == false) {
+		uchar* ptr = (uchar*) (tempImage->imageData + (tempImage->width - 2) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + (tempImage->width - 1) * tempImage->widthStep);
+		for(int x=0; (x < tempImage->width) && (black_pixel_is_found == false); x++ ) {
+			if (ptr2[x] == 255) {
+				for (int i = -1; (i < 2) && (second_black_pixel_is_found == false); i++) {
+					if (
+						((x + i) != -1) &&
+						((x + i) != tempImage->width)
+						) {
+						if (ptr [x + i] == 0) {
+							if (black_pixel_is_found == false) {
+								black_pixel_is_found = true;
+								x_first_black_pixel = x + i;
+								y_first_black_pixel = tempImage->width - 2;
+							}
+							else {
+								second_black_pixel_is_found = true;
+								black_pixel_is_found = false;
+							}
+						}
+					
+						if (ptr2 [x + i] == 0 && second_black_pixel_is_found == false) {
+							if (black_pixel_is_found == false) {
+								black_pixel_is_found = true;
+								x_first_black_pixel = x + i;
+								y_first_black_pixel = tempImage->width - 1;
+							}
+							else {
+								second_black_pixel_is_found = true;
+								black_pixel_is_found = false;
+							}
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+			}
+		}
+	}
+
+	//поиск чЄрного пиксел€ не на границах
+	for(int y = 1; (y < (tempImage->height - 1)) && (black_pixel_is_found == false); y++) {
+		uchar* ptr1 = (uchar*) (tempImage->imageData + (y - 1) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
+		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
+		for(int x = 1; x < (tempImage->width - 1) && (black_pixel_is_found == false); x++ ) {
+			if (ptr2[x] == 255) {
+				//поиск единственного чЄрного пиксел€
+				for (int w = -1; (w < 2) && (second_black_pixel_is_found == false); w++) {
+					if (ptr1[x + w] == 0) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel = x + w;
+							y_first_black_pixel = (y-1);
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+					if (ptr2[x + w] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel  = x + w;
+							y_first_black_pixel = y;
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+					if (ptr3[x + w] == 0 && second_black_pixel_is_found == false) {
+						if (black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							x_first_black_pixel  = x + w;
+							y_first_black_pixel = (y+1);
+						}
+						else {
+							second_black_pixel_is_found = true;
+							black_pixel_is_found = false;
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+			}
+		}
+	}
+	//проверены все пиксели на наличие начала дуги
+	return black_pixel_is_found;
 }
 
+void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_vertex, int x_neighbor, int y_neighbor) {
+	TwoPoints newDoublePoint;
+										
+	//создание вершины
+	CvPoint newPoint;
+	newPoint.x = x_vertex;
+	newPoint.y = y_vertex;
+	newDoublePoint.vertex = newPoint;
+
+	//создание соседа
+	newPoint.x = x_neighbor;
+	newPoint.y = y_neighbor;
+	newDoublePoint.neighbor = newPoint;
+
+	//добавление новой пары в стек
+	current_vector.push_back(newDoublePoint);
+}
 #endif //SKELETONIZATION_H

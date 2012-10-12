@@ -54,12 +54,11 @@ void myTrackbarSigma2(int pos) {sigma2 = pos;}
 int main (int argc, char** argv) {
 	IplImage *inputImage = 0;
 	// им€ картинки задаЄтс€ первым параметром
-    char* filename = argc == 2 ? argv[1] : "Image0.jpg";
+    char* filename = argc == 2 ? argv[1] : "test_find_pixel.bmp";
     // получаем картинку
-	//inputImage = cvLoadImage(filename, CV_LOAD_IMAGE_GRAYSCALE);
+	inputImage = cvLoadImage(filename, CV_LOAD_IMAGE_GRAYSCALE);
 	//inputImage = cvLoadImage(filename, CV_LOAD_IMAGE_UNCHANGED);
-	//IplImage *Igray = cvLoadImage( argv[6], CV_LOAD_IMAGE_GRAYSCALE);
-	inputImage = cvLoadImage(filename, 1);
+	//inputImage = cvLoadImage(filename, 1);
 	//cvShowImage("original", inputImage);
     printf("[i] image: %s\n", filename);
     if (!inputImage) {
@@ -67,8 +66,14 @@ int main (int argc, char** argv) {
 		pause();
 		exit(0);
 	}
+	inputImage = buildSkeleton(inputImage);
+	cvNamedWindow("temp", 0);
+	cvShowImage("temp", inputImage);
+	vector <Skelet> skelets;
+	skelets = getSkelets(inputImage);
+//#define main_action
+#ifdef main_action
 	cvNamedWindow("original",CV_WINDOW_AUTOSIZE);
-	
 	//улучшение снимков
 	IplImage *improvedImage = cvCreateImage( cvGetSize(inputImage), IPL_DEPTH_8U, 3 );
 	
@@ -93,40 +98,6 @@ int main (int argc, char** argv) {
 	
 	cvCreateTrackbar("Radius", "original", &radius, radius_max, myTrackbarRadius);
 	cvCreateTrackbar("Iterations", "original", &iterations, iterations_max, myTrackbarIterations);
-//#define com
-#ifdef com
-	IplConvKernel* Kern = cvCreateStructuringElementEx(radius*2+1, radius*2+1, radius, radius, CV_SHAPE_ELLIPSE);
-	cvDilate(newImage, sum, Kern, iterations);
-	cvErode(sum, sum, Kern, iterations);
-	
-	IplImage *smoothImage = cvCloneImage(newImage);
-	cvSmooth(sum, smoothImage, CV_BILATERAL, 100, 100, 100, 50);
-	//поиск контуров дл€ цепного кода фримена
-	//IplImage *smoothImage = cvLoadImage("smooth.jpg", 1);
-	cvCvtColor(smoothImage, gray, CV_RGB2GRAY);
-
-	IplImage *outputImage1 = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 1);
-	//cvAdaptiveThreshold(gray, outputImage1, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, block, pixels);
-	cvInRangeS(gray, cvScalar(40), cvScalar(150), outputImage1/*bin*/);
-	CvMemStorage* storage = cvCreateMemStorage(0);
-	CvSeq* contours=0;
-	int contoursCont = cvFindContours( /*bin*/outputImage1, storage,&contours,sizeof(CvContour),CV_RETR_LIST,CV_CHAIN_APPROX_SIMPLE,cvPoint(0,0));
-	printf("%d\n", contoursCont);
-	IplImage *dst1 = cvCloneImage(newImage);
-	for(CvSeq* seq0 = contours;seq0!=0;seq0 = seq0->h_next){
-		cvDrawContours(dst1, seq0, CV_RGB(255,216,0), CV_RGB(0,0,250), 0, 1, 8);
-	}
-	cvNamedWindow("contours", 0);
-	cvShowImage("contours", dst1);
-	cvReleaseImage(&dst1);
-	cvReleaseImage(&outputImage1);
-	//выведены контуры
-
-	IplImage *outputImage = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 1);
-	cvAdaptiveThreshold(gray, outputImage, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, block, pixels);
-	cvNamedWindow("bin", 1);
-	cvShowImage("bin", outputImage);
-#endif
 	cvCreateTrackbar("Pix", "original", &pixels, pixels_max, myTrackbarPixels);
 	cvCreateTrackbar("Block", "original", &block, block_max, myTrackbarBlock);
 	cvCreateTrackbar("HeightF", "original", &filter_height, filter_height_max, myTrackbarFilterHeight);
@@ -135,10 +106,7 @@ int main (int argc, char** argv) {
 	cvCreateTrackbar("Sigma 2", "original", &sigma2, sigma2_max, myTrackbarSigma2);
 	cvShowImage("original", inputImage);
 	cvNamedWindow("canny200-250", 1); //вот он дал наилучший результат
-	//cvNamedWindow("SUM", CV_WINDOW_AUTOSIZE);
 	
-#define comment
-#ifdef comment
 	cvNamedWindow("bin", 1);
 	int source_radius = radius, source_iterations = iterations, source_block = block, source_pixels = pixels;
 	while(1) {
@@ -203,10 +171,10 @@ int main (int argc, char** argv) {
 			system("cls");
 		
 	}
-#endif
-#ifdef com
-	cvReleaseImage(&smoothImage);
-	cvReleaseStructuringElement(&Kern);
+	cvReleaseImage(&gray);
+	cvReleaseImage(&dst);
+	cvReleaseImage(&sum);
+	cvReleaseImage(&improvedImage);
 #endif
 
 	//выделение объектов на снимках
@@ -227,158 +195,6 @@ int main (int argc, char** argv) {
 
 	//вывод объектов контуров объектов на каждый снимок
 	//вывод линий, соедин€ющих положение одного и того же объекта
-	/*cvNamedWindow("Erode", 0);
-	cvShowImage("Erode", gray);
-	cvCvtColor(erode, gray, CV_RGB2GRAY);
-	improveImageQuality(inputImage, erode);*/
-	/*cvNamedWindow("Dilate", CV_WINDOW_AUTOSIZE);
-	cvShowImage("Dilate", dst);*/
-	
-	
-	/*cvSmooth(inputImage, smoothImage, CV_GAUSSIAN, 3, 3);
-	cvNamedWindow("smooth", 0);
-	cvShowImage("smooth", smoothImage);
-	cvCvtColor(inputImage, gray, CV_RGB2GRAY);
-	//cvSmooth(inputImage, smoothImage, CV_BILATERAL, 100, 100, 100, 50);
-	cvSaveImage("temp.jpg", smoothImage);
-	cvCvtColor(smoothImage, gray, CV_RGB2GRAY);*/
-
-	//построение контуров
-	/*cvCanny(gray, dst, 10, 250, 3);
-	cvNamedWindow("erode10-250", 0);
-	cvShowImage("erode10-250", dst);
-	cvCanny(gray, dst, 200, 250, 3);
-	cvNamedWindow("erode200-250", 0);
-	cvShowImage("erode200-250", dst);
-	cvCanny(gray, dst, 150, 200, 3);
-	cvNamedWindow("erode150-200", 0);
-	cvShowImage("erode150-200", dst);*/
-
-	/*cvCvtColor(dilate, gray, CV_RGB2GRAY);
-	cvCanny(gray, dst, 10, 250, 3); //этот дал хороший результат при пасмурной погоде
-	cvNamedWindow("dilate10-250", 0);
-	cvShowImage("dilate10-250", dst);
-	cvReleaseImage(&newImage);*/
-	/*cvCanny(gray, dst, 200, 250, 3);
-	cvNamedWindow("dilate200-250", 0); //вот он дал наилучший результат
-	cvShowImage("dilate200-250", dst);
-	cvSaveImage("fairWeather.jpg", dst);*/
-	/*cvCanny(gray, dst, 150, 200, 3);
-	cvNamedWindow("dilate150-200", 0);
-	cvShowImage("dilate150-200", dst);*/
-	
-	
-	/*cvSmooth(inputImage, outputImage, CV_BILATERAL, 9, 9, 100, 0);
-	cvSaveImage("temp.jpg", outputImage);
-	outputImage = cvLoadImage("temp.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	cvAdaptiveThreshold(outputImage, outputImage, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 29, 15);*/
-	
-	/*inputImage = cvLoadImage(filename, CV_LOAD_IMAGE_GRAYSCALE);
-	cvAdaptiveThreshold(inputImage, outputImage, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 29, 15);
-	cvSaveImage("withoutSmooth.jpg", outputImage);*/
-	
-	
-	/*cvReleaseImage(&bin);
-	cvReleaseImage(&smoothImage);*/
-	//cvReleaseImage(&smoothImage);
-	//выделение границ
-	//IplImage *gray = cvCreateImage( cvGetSize(inputImage), IPL_DEPTH_8U, 1 );
-	//IplImage *dst = cvCreateImage( cvGetSize(inputImage), IPL_DEPTH_8U, 1 );
-	////cvCvtColor(inputImage, gray, CV_RGB2GRAY);
-	//cvCanny(bin, dst, 10, 100, 3);
-	//cvSaveImage("kontur.jpg", dst);
-	//cvReleaseImage(&dst);
-
-
-	/*IplImage* bin = cvCreateImage( cvGetSize(inputImage), IPL_DEPTH_8U, 1);
-	cvConvertImage(inputImage, bin, CV_BGR2GRAY);*/
-	
-	//узнаем разрешение экрана по горизонтали
-	//int width = GetSystemMetrics(0);
-	//и вертикали
-	//int height = GetSystemMetrics(1);
-
-	/*//создадим окно дл€ вывода входного изображени€
-	cvNamedWindow( "original", 0 );
-	//установим размер окна
-	cvResizeWindow("original", width*0.6, height*0.6);
-	//сдвинем окно
-	cvMoveWindow("original", width*0.15, height*0.2);
-	//выведем входное изображение в это окно
-	cvShowImage("original", inputImage);*/
-	
-
-	//выделим место в пам€ти под бинаризованное изображение
-	//IplImage *outputImage1 = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 3);
-	/*IplImage *outputImage1 = cvCloneImage(inputImage);
-	cvSmooth(inputImage, outputImage1, CV_GAUSSIAN, 9, 9);
-	cvSaveImage("smooth.jpg", outputImage1);*/
-	
-	//создадим бинаризованное изображение в выделенном месте
-	//cvAdaptiveThreshold(inputImage, outputImage1, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 99, 15);
-	//создадим бинаризованное изображение в выделенном месте
-	//cvConvertImage(inputImage, outputImage1, CV_BGR2GRAY);
-	//cvThreshold(outputImage1,outputImage1,(double) 15,155,CV_THRESH_BINARY);
-	
-	/*cvNamedWindow( "original gray", 0 );
-	cvShowImage("original gray", outputImage1);
-	cvResizeWindow("original gray", width*0.95, height*0.95);*/
-	/*cvAdaptiveThreshold(outputImage1, outputImage1, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 79, 15);
-	cvAdaptiveThreshold(outputImage1, outputImage1, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 29, 15);*/
-
-	//выведем несколько изображений с разными размером блока и коэффициентом
-	//выделим место в пам€ти под бинаризованное изображение
-	/*IplImage *outputImage = cvCreateImage(cvSize(gray->width,gray->height), IPL_DEPTH_8U, 1);
-	for (int i = 3; i <= 101; i += 2) {
-		for (int j = 0; j <= 12; j += 1) {
-			cvAdaptiveThreshold(gray, outputImage, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, i, j);
-			char *fileName = new char [10];
-			strcpy(fileName, "output");
-			char *number = new char [2];
-			itoa(i, number, 10);
-			strcat(fileName, number);
-			strcat(fileName, "_");
-			itoa(j, number, 10);
-			strcat(fileName, number);
-			strcat(fileName, ".jpg");
-			cvSaveImage(fileName, outputImage);
-		}
-		printf("%s%d\n", "block size finished: ", i);
-	}*/
-	//cvResize(inputImage, outputImage1, CV_INTER_AREA);
-	/*//создадим окно дл€ вывода выходного изображени€
-	cvNamedWindow( "outptut1", 0 );
-	//установим размер окна
-	cvResizeWindow("outptut1", width*0.95, height*0.95);
-	//сдвинем окно
-	//cvMoveWindow("outptut1", width-500-width*0.6, height-height*0.6-100);
-	cvMoveWindow("outptut1", 0, 0);
-	//выведем выходное изображение в это окно
-	cvShowImage("outptut1", outputImage1);*/
-	
-
-	//создадим изображение с утонченым скелетом
-	//IplImage *skeletImage = buildSkeleton(outputImage1);
-	
-	
-
-	/*//создадим окно дл€ вывода выходного изображени€
-	cvNamedWindow( "skelet", 0 );
-	//установим размер окна
-	cvResizeWindow("skelet", width*0.4, height*0.4);
-	//сдвинем окно
-	cvMoveWindow("skelet", width-200-width*0.6, height-height*0.6+100);
-	//выведем выходное изображение в это окно
-	cvShowImage("skelet", skeletImage);*/
-	//сохраним выходное изображение в это окно
-	//cvSaveImage("output.jpg", skeletImage);
-	//освободим пам€ть из под изображени€ скелета
-	//cvReleaseImage(&skeletImage);
-		
-	/*cvNamedWindow( "outptut2", 0 );
-	cvResizeWindow("outptut2", width*0.4, height*0.4);
-	cvMoveWindow("outptut2", width-width*0.5, height-height*0.5);
-	cvShowImage("outptut2", outputImage2);*/
 	
 	printf("All done\n");
 	//pause();
@@ -390,16 +206,6 @@ int main (int argc, char** argv) {
 	}*/
 	cvDestroyAllWindows();
 	cvReleaseImage(&inputImage);
-	//cvReleaseImage(&erode);
-	//cvReleaseImage(&dilate);
-	cvReleaseImage(&gray);
-	cvReleaseImage(&dst);
-	cvReleaseImage(&sum);
-	cvReleaseImage(&improvedImage);
-	//cvReleaseImage(&outputImage);
-	//cvReleaseImage(&outputImage1);
-	//cvReleaseImage(&outputImage1);
-	//cvReleaseImage(&outputImage3);
 	return 1;
 }
 #endif
