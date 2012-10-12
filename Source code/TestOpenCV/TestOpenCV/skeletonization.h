@@ -193,7 +193,7 @@ vector <Skelet> getSkelets(IplImage *image) {
 	vector <Skelet> skelets;
 	IplImage *tempImage = cvCloneImage(image);
 	bool black_pixel_is_found, second_black_pixel_is_found = false;
-	int x_first_black_pixel, y_first_black_pixel;
+	int x_first_black_pixel, y_first_black_pixel, x_current_pixel_plus_x, y_current_pixel_plus_y;
 	
 	//пока есть пиксель, являющийся началом скелета
 	while (findBlackPixelWithOneNeighbor (tempImage, x_first_black_pixel, y_first_black_pixel)) {
@@ -239,13 +239,18 @@ vector <Skelet> getSkelets(IplImage *image) {
 				single_black_neighbor_is_found = false;
 				int x_neighbor, y_neighbor;
 				for (int y = -1; y < 2; y++) {
-					uchar* ptr = (uchar*) (tempImage->imageData + (y_current_pixel + y) * tempImage->widthStep);
+					y_current_pixel_plus_y = y_current_pixel + y;
+					uchar* ptr = (uchar*) (tempImage->imageData + y_current_pixel_plus_y * tempImage->widthStep);
 					for (int x = -1; x < 2; x++) {
-						if (x != 0 || y != 0) {
+						x_current_pixel_plus_x = x_current_pixel + x;
+						if ((x != 0 || y != 0) 
+							&& ((0 <= y_current_pixel_plus_y) && (y_current_pixel_plus_y < tempImage->height) &&
+							(0 <= x_current_pixel_plus_x) && (x_current_pixel_plus_x < tempImage->width))
+							) {
 							if (ptr[x_current_pixel + x] == 0) {
 								if ((single_black_neighbor_is_found == false) && (vertexStack.size() == 0)) {
-									x_neighbor = x_current_pixel + x;
-									y_neighbor = y_current_pixel + y;
+									x_neighbor = x_current_pixel_plus_x;
+									y_neighbor = y_current_pixel_plus_y;
 									single_black_neighbor_is_found = true;
 								}
 								else {
@@ -255,18 +260,18 @@ vector <Skelet> getSkelets(IplImage *image) {
 										addVertexAndPixel (vertexStack, x_current_pixel, y_current_pixel, x_neighbor, y_neighbor);
 
 										//установка маркера 3 у чёрного соседа
-										uchar* cur_ptr = (uchar*) (tempImage->imageData + (y_neighbor) * tempImage->widthStep);
+										uchar* cur_ptr = (uchar*) (tempImage->imageData + y_neighbor * tempImage->widthStep);
 										cur_ptr[x_neighbor] = 3;
 
 										single_black_neighbor_is_found = false;
 									}
 
 									//добавление текущей вершины графа для текущего соседа
-									addVertexAndPixel (vertexStack, x_current_pixel, y_current_pixel, x_current_pixel + x, y_current_pixel + y);
+									addVertexAndPixel (vertexStack, x_current_pixel, y_current_pixel, x_current_pixel_plus_x, y_current_pixel_plus_y);
 
 									//установка маркера 3 у чёрного соседа
-									uchar* cur_ptr = (uchar*) (tempImage->imageData + (y_current_pixel + y) * tempImage->widthStep);
-									cur_ptr[x_current_pixel + x] = 3;
+									uchar* cur_ptr = (uchar*) (tempImage->imageData + y_current_pixel_plus_y * tempImage->widthStep);
+									cur_ptr[x_current_pixel_plus_x] = 3;
 								}
 							}
 						}
