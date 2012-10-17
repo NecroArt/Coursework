@@ -28,7 +28,19 @@ int getWeightArc (CvPoint startPoint, CvPoint finishPoint);
 vector <Skelet> getSkelets(IplImage *image);
 bool findBlackPixelWithOneNeighbor (IplImage *tempImage, int &x_first_black_pixel, int &y_first_black_pixel);
 
+//добавляет 2 точки в вектор, элемент которого - 2 точки
 void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_vertex, int x_neighbor, int y_neighbor);
+
+//сравнивает два скелета и возвращает степень их различия
+bool compareSkelets (Skelet first_skelet, Skelet second_skelet);
+
+//функция для сравнения двух дуг по их длине
+bool isFirstArchBigger (Arch arch1, Arch arch2) { 
+	return (arch1.points.size() < arch2.points.size());
+}
+
+//сортирует дуги скелета по длине в возрастающем порядке
+void sortSkelet(vector <Skelet> &Skelet);
 
 IplImage *buildSkeleton (IplImage *inputImage) {
 	IplImage *outputImage = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 1);
@@ -192,7 +204,7 @@ int getWeightArc (CvPoint startPoint, CvPoint finishPoint, IplImage *image) {
 vector <Skelet> getSkelets(IplImage *image) {
 	vector <Skelet> skelets;
 	IplImage *tempImage = cvCloneImage(image);
-	bool black_pixel_is_found, second_black_pixel_is_found = false;
+	//bool black_pixel_is_found, second_black_pixel_is_found = false;
 	int x_first_black_pixel, y_first_black_pixel, x_current_pixel_plus_x, y_current_pixel_plus_y;
 	
 	//пока есть пиксель, являющийся началом скелета
@@ -200,16 +212,16 @@ vector <Skelet> getSkelets(IplImage *image) {
 		Skelet currentSkelet;
 		vector <CvPoint> vertexMass;
 		vector <TwoPoints> vertexStack;
+		bool is_second_black_neighbor_found = false;
 		do {
 			int x_current_pixel = x_first_black_pixel, y_current_pixel = y_first_black_pixel;
-			bool single_black_neighbor_is_found;
+			bool is_single_black_neighbor_found = false;
 			
 			//создание дуги
 			vector <CvPoint> currentArch;
-				
 			//построение дуги
 			do {	
-				if (vertexStack.size() != 0) {
+				if (vertexStack.size() != 0 && (is_single_black_neighbor_found == false)) {
 					//извлечение вершины из стека
 					TwoPoints current2Points;
 					current2Points = vertexStack.back();
@@ -234,9 +246,10 @@ vector <Skelet> getSkelets(IplImage *image) {
 				//маркировка ячейки
 				uchar* ptr = (uchar*) (tempImage->imageData + y_current_pixel * tempImage->widthStep);
 				ptr[x_current_pixel] = 2;
-
+				
 				//поиск следующего пикселя
-				single_black_neighbor_is_found = false;
+				is_single_black_neighbor_found = false;
+				is_second_black_neighbor_found = false;
 				int x_neighbor, y_neighbor;
 				for (int y = -1; y < 2; y++) {
 					y_current_pixel_plus_y = y_current_pixel + y;
@@ -247,23 +260,24 @@ vector <Skelet> getSkelets(IplImage *image) {
 							&& ((0 <= y_current_pixel_plus_y) && (y_current_pixel_plus_y < tempImage->height) &&
 							(0 <= x_current_pixel_plus_x) && (x_current_pixel_plus_x < tempImage->width))
 							) {
-							if (ptr[x_current_pixel + x] == 0) {
-								if ((single_black_neighbor_is_found == false) && (vertexStack.size() == 0)) {
+							if (ptr[x_current_pixel_plus_x] == 0) {
+								if ((is_single_black_neighbor_found == false) && (is_second_black_neighbor_found == false)) {
 									x_neighbor = x_current_pixel_plus_x;
 									y_neighbor = y_current_pixel_plus_y;
-									single_black_neighbor_is_found = true;
+									is_single_black_neighbor_found = true;
 								}
 								else {
 									//если первый заход в условие
-									if (single_black_neighbor_is_found == true) {
+									if (is_single_black_neighbor_found == true) {
 										//добавление текущей вершины графа для первого соседа
 										addVertexAndPixel (vertexStack, x_current_pixel, y_current_pixel, x_neighbor, y_neighbor);
+										is_second_black_neighbor_found = true;
 
 										//установка маркера 3 у чёрного соседа
 										uchar* cur_ptr = (uchar*) (tempImage->imageData + y_neighbor * tempImage->widthStep);
 										cur_ptr[x_neighbor] = 3;
 
-										single_black_neighbor_is_found = false;
+										is_single_black_neighbor_found = false;
 									}
 
 									//добавление текущей вершины графа для текущего соседа
@@ -280,7 +294,7 @@ vector <Skelet> getSkelets(IplImage *image) {
 				//закончен поиск следующего пикселя
 
 				//если найдена ячейка с единственным чёрным соседом, то его координаты принимаются в качестве текущих
-				if (single_black_neighbor_is_found == true) {
+				if (is_single_black_neighbor_found == true) {
 					x_current_pixel = x_neighbor;
 					y_current_pixel = y_neighbor;
 
@@ -292,7 +306,7 @@ vector <Skelet> getSkelets(IplImage *image) {
 					newVertex.y = y_current_pixel;
 					vertexMass.push_back(newVertex);
 				}
-			} while (single_black_neighbor_is_found == true);
+			} while (is_single_black_neighbor_found == true);
 			
 			//добавление в скелет новой дуги
 			Arch newArch;
@@ -545,5 +559,14 @@ void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_
 
 	//добавление новой пары в стек
 	current_vector.push_back(newDoublePoint);
+}
+
+void sortSkelet(vector <Arch> Skelet) {
+	sort (Skelet.begin(), Skelet.end(), isFirstArchBigger);
+}
+
+bool compareSkelets (Skelet first_skelet, Skelet second_skelet) {
+	bool is_equal = false;
+	return is_equal;
 }
 #endif //SKELETONIZATION_H

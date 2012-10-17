@@ -71,6 +71,10 @@ int main (int argc, char** argv) {
 	cvShowImage("temp", inputImage);
 	vector <Skelet> skelets;
 	skelets = getSkelets(inputImage);
+	Skelet t = skelets[0];
+	sortSkelet(t.arch);
+	//Skelet skelet1, skelet2;
+	//compareSkelets(skelet1, skelet2);
 //#define main_action
 #ifdef main_action
 	cvNamedWindow("original",CV_WINDOW_AUTOSIZE);

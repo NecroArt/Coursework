@@ -1,5 +1,5 @@
-﻿Build started 13.10.2012 4:18:56.
-     1>Project "D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\TestOpenCV\TestOpenCV.vcxproj" on node 2 (build target(s)).
+﻿Build started 18.10.2012 1:27:21.
+     1>Project "C:\Users\Artyom\Documents\GitHub\Coursework\Source code\TestOpenCV\TestOpenCV\TestOpenCV.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\TestOpenCV.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
@@ -10,18 +10,17 @@
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
      1>d:\opencv2.3.1x32\build\include\opencv2\flann\flann.hpp(233): warning C4996: 'cv::flann::Index_<T>': was declared deprecated
                  d:\opencv2.3.1x32\build\include\opencv2\flann\flann.hpp(278) : see reference to class template instantiation 'cv::flann::Index_<T>' being compiled
-     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(126): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\users\artyom\documents\github\coursework\source code\testopencv\testopencv\skeletonization.h(138): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
-     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(133): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _itoa. See online help for details.
+     1>c:\users\artyom\documents\github\coursework\source code\testopencv\testopencv\skeletonization.h(145): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _itoa. See online help for details.
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(867) : see declaration of 'itoa'
-     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(128): warning C4101: 'y1' : unreferenced local variable
-     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(128): warning C4101: 'ptr1' : unreferenced local variable
-     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(128): warning C4101: 'x1' : unreferenced local variable
-     1>d:\different\workspaces\visual studio 2010 projects\testopencv\testopencv\skeletonization.h(195): warning C4101: 'black_pixel_is_found' : unreferenced local variable
+     1>c:\users\artyom\documents\github\coursework\source code\testopencv\testopencv\skeletonization.h(140): warning C4101: 'y1' : unreferenced local variable
+     1>c:\users\artyom\documents\github\coursework\source code\testopencv\testopencv\skeletonization.h(140): warning C4101: 'ptr1' : unreferenced local variable
+     1>c:\users\artyom\documents\github\coursework\source code\testopencv\testopencv\skeletonization.h(140): warning C4101: 'x1' : unreferenced local variable
        ManifestResourceCompile:
          All outputs are up-to-date.
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\Debug\TestOpenCV.exe" /INCREMENTAL /NOLOGO D:\OpenCV2.3.1x32\build\lib\Debug\opencv_highgui231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_core231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_flann231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_calib3d231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_contrib231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_features2d231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_gpu231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_haartraining_engined.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_imgproc231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_legacy231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_ml231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_objdetect231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_ts231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_video231d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\TestOpenCV.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\Debug\TestOpenCV.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\Debug\TestOpenCV.lib" /MACHINE:X86 Debug\TestOpenCV.exe.embed.manifest.res
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Artyom\Documents\GitHub\Coursework\Source code\TestOpenCV\Debug\TestOpenCV.exe" /INCREMENTAL /NOLOGO D:\OpenCV2.3.1x32\build\lib\Debug\opencv_highgui231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_core231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_flann231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_calib3d231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_contrib231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_features2d231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_gpu231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_haartraining_engined.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_imgproc231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_legacy231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_ml231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_objdetect231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_ts231d.lib D:\OpenCV2.3.1x32\build\lib\Debug\opencv_video231d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\TestOpenCV.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Artyom\Documents\GitHub\Coursework\Source code\TestOpenCV\Debug\TestOpenCV.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Artyom\Documents\GitHub\Coursework\Source code\TestOpenCV\Debug\TestOpenCV.lib" /MACHINE:X86 Debug\TestOpenCV.exe.embed.manifest.res
          Debug\stdafx.obj
          Debug\TestOpenCV.obj
        Manifest:
@@ -29,12 +28,12 @@
          All outputs are up-to-date.
        LinkEmbedManifest:
          All outputs are up-to-date.
-         TestOpenCV.vcxproj -> D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\Debug\TestOpenCV.exe
+         TestOpenCV.vcxproj -> C:\Users\Artyom\Documents\GitHub\Coursework\Source code\TestOpenCV\Debug\TestOpenCV.exe
        FinalizeBuildStatus:
          Deleting file "Debug\TestOpenCV.unsuccessfulbuild".
          Touching "Debug\TestOpenCV.lastbuildstate".
-     1>Done Building Project "D:\Different\Workspaces\Visual Studio 2010 Projects\TestOpenCV\TestOpenCV\TestOpenCV.vcxproj" (build target(s)).
+     1>Done Building Project "C:\Users\Artyom\Documents\GitHub\Coursework\Source code\TestOpenCV\TestOpenCV\TestOpenCV.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:06.28
+Time Elapsed 00:00:05.78
