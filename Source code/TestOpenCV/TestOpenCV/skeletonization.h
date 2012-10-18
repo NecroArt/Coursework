@@ -36,11 +36,11 @@ bool compareSkelets (Skelet first_skelet, Skelet second_skelet);
 
 //функци€ дл€ сравнени€ двух дуг по их длине
 bool isFirstArchBigger (Arch arch1, Arch arch2) { 
-	return (arch1.points.size() < arch2.points.size());
+	return (arch1.points.size() > arch2.points.size());
 }
 
 //сортирует дуги скелета по длине в возрастающем пор€дке
-void sortSkelet(vector <Skelet> &Skelet);
+void sortSkelet(vector <Arch> &Arches);
 
 IplImage *buildSkeleton (IplImage *inputImage) {
 	IplImage *outputImage = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 1);
@@ -561,12 +561,28 @@ void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_
 	current_vector.push_back(newDoublePoint);
 }
 
-void sortSkelet(vector <Arch> Skelet) {
-	sort (Skelet.begin(), Skelet.end(), isFirstArchBigger);
+void sortSkelet(vector <Arch> &Arches) {
+	sort (Arches.begin(), Arches.end(), isFirstArchBigger);
 }
-
+#include <math.h>
 bool compareSkelets (Skelet first_skelet, Skelet second_skelet) {
-	bool is_equal = false;
+	bool is_equal = true;
+	sortSkelet(first_skelet.arch);
+	sortSkelet(second_skelet.arch);
+	vector <float> ratio;
+	if (abs((int) first_skelet.arch.size() - (int) second_skelet.arch.size()) > 2) {
+		is_equal = false;
+	}
+	else {
+		for (int i = 0; (i < first_skelet.arch.size()) && (i < second_skelet.arch.size()); i++) {
+			ratio.push_back((float) first_skelet.arch.at(i).points.size() / (float) second_skelet.arch.at(i).points.size());
+		}
+		for (int i = 1; (i < ratio.size()) && (is_equal == true); i++) {
+			if (abs(ratio.at(i-1) - ratio.at(i)) > 0.001) {
+				is_equal = false;
+			}
+		}
+	}
 	return is_equal;
 }
 #endif //SKELETONIZATION_H

@@ -67,14 +67,17 @@ int main (int argc, char** argv) {
 		exit(0);
 	}
 	inputImage = buildSkeleton(inputImage);
-	cvNamedWindow("temp", 0);
-	cvShowImage("temp", inputImage);
 	vector <Skelet> skelets;
 	skelets = getSkelets(inputImage);
-	Skelet t = skelets[0];
-	sortSkelet(t.arch);
-	//Skelet skelet1, skelet2;
-	//compareSkelets(skelet1, skelet2);
+	Skelet skelet1 = skelets[0];
+
+	IplImage *inputImage2 = cvLoadImage("test_find_pixel_2.bmp", CV_LOAD_IMAGE_GRAYSCALE);
+	vector <Skelet> skelets_2;
+	skelets_2 = getSkelets(inputImage2);
+	cvReleaseImage(&inputImage2);
+	
+	Skelet skelet2 = skelets_2[0];
+	bool fl = compareSkelets(skelet1, skelet2);
 //#define main_action
 #ifdef main_action
 	cvNamedWindow("original",CV_WINDOW_AUTOSIZE);
