@@ -319,9 +319,258 @@ vector <Skelet> getSkelets(IplImage *image) {
 }
 bool findBlackPixelWithOneNeighbor (IplImage *tempImage, int &x_first_black_pixel, int &y_first_black_pixel)
 {
-	bool black_pixel_is_found = false, second_black_pixel_is_found = false;
+	//поиск чёрного пикселя с одним чёрным соседом
+	bool black_pixel_is_found = false, second_black_pixel_is_found = false, third_black_pixel_is_found = false;
 	uchar* ptr = (uchar*) (tempImage->imageData);
 	uchar* ptr2 = (uchar*) (tempImage->imageData + tempImage->widthStep);
+	for(int x=0; (x < tempImage->width) && (black_pixel_is_found == false); x++ ) {
+		if (ptr[x] == 0) {
+			for (int i = -1; (i < 2) && (third_black_pixel_is_found == false); i++) {
+				if (
+					((x + i) != -1) &&
+					((x + i) != tempImage->width)) {
+					if (ptr [x + i] == 0 && i != 0) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = 0;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					
+					if (ptr2 [x + i] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = 0;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+				}
+			}
+			second_black_pixel_is_found = false;
+			third_black_pixel_is_found = false;
+		}
+	}
+
+	//поиск чёрного пикселя в левом столбце
+	for(int y = 1; (y < (tempImage->height - 1)) && (black_pixel_is_found == false); y++) {
+		uchar* ptr1 = (uchar*) (tempImage->imageData + (y - 1) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
+		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
+		{
+			if (ptr2[0] == 0) {
+				for (int x = 0; (x < 2) && (third_black_pixel_is_found == false); x++) {
+					if (ptr1[x] == 0) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = 0;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					if (x != 0 && ptr2[x] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = 0;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					if (ptr3[x] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = 0;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+				third_black_pixel_is_found = false;
+			}
+		}
+	}
+	//поиск чёрного пикселя в правом столбце
+	for(int y = 1; (y < (tempImage->height - 1)) && (black_pixel_is_found == false); y++) {
+		uchar* ptr1 = (uchar*) (tempImage->imageData + (y - 1) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
+		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
+		{
+			if (ptr2[tempImage->width - 1] == 0) {
+				for (int x = tempImage->width - 2; (x < tempImage->width) && (second_black_pixel_is_found == false); x++) {
+					if (ptr1[x] == 0) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = tempImage->width - 1;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					if (x != 0 && ptr2[x] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = tempImage->width - 1;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					if (ptr3[x] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = tempImage->width - 1;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+				third_black_pixel_is_found = false;
+			}
+		}
+	}
+	//поиск чёрного пикселя в нижней строке
+	if (black_pixel_is_found == false) {
+		uchar* ptr = (uchar*) (tempImage->imageData + (tempImage->width - 2) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + (tempImage->width - 1) * tempImage->widthStep);
+		for(int x=0; (x < tempImage->width) && (black_pixel_is_found == false); x++ ) {
+			if (ptr2[x] == 0) {
+				for (int i = -1; (i < 2) && (third_black_pixel_is_found == false); i++) {
+					if (
+						((x + i) != -1) &&
+						((x + i) != tempImage->width)) {
+						if (ptr [x + i] == 0) {
+							if (second_black_pixel_is_found == false) {
+								black_pixel_is_found = true;
+								second_black_pixel_is_found = true;
+								x_first_black_pixel = x;
+								y_first_black_pixel = tempImage->width - 1;
+							}
+							else {
+								black_pixel_is_found = false;
+								second_black_pixel_is_found = false;
+								third_black_pixel_is_found = true;
+							}
+						}
+					
+						if (i != 0 && ptr2 [x + i] == 0 && third_black_pixel_is_found == false) {
+							if (second_black_pixel_is_found == false) {
+								black_pixel_is_found = true;
+								second_black_pixel_is_found = true;
+								x_first_black_pixel = x;
+								y_first_black_pixel = tempImage->width - 1;
+							}
+							else {
+								black_pixel_is_found = false;
+								second_black_pixel_is_found = false;
+								third_black_pixel_is_found = true;
+							}
+						}
+					}
+				}
+			second_black_pixel_is_found = false;
+			third_black_pixel_is_found = false;
+			}
+		}
+	}
+	//поиск чёрного пикселя не на границах
+	for(int y = 1; (y < (tempImage->height - 1)) && (black_pixel_is_found == false); y++) {
+		uchar* ptr1 = (uchar*) (tempImage->imageData + (y - 1) * tempImage->widthStep);
+		uchar* ptr2 = (uchar*) (tempImage->imageData + y * tempImage->widthStep);
+		uchar* ptr3 = (uchar*) (tempImage->imageData + (y + 1) * tempImage->widthStep);
+		for(int x = 1; x < (tempImage->width - 1) && (black_pixel_is_found == false); x++ ) {
+			if (ptr2[x] == 0) {
+				//поиск единственного чёрного пикселя
+				for (int w = -1; (w < 2) && (third_black_pixel_is_found == false); w++) {
+					if (ptr1[x + w] == 0) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					if (w != 0 && ptr2[x + w] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+					if (ptr3[x + w] == 0 && third_black_pixel_is_found == false) {
+						if (second_black_pixel_is_found == false) {
+							black_pixel_is_found = true;
+							second_black_pixel_is_found = true;
+							x_first_black_pixel = x;
+							y_first_black_pixel = y;
+						}
+						else {
+							black_pixel_is_found = false;
+							second_black_pixel_is_found = false;
+							third_black_pixel_is_found = true;
+						}
+					}
+				}
+				second_black_pixel_is_found = false;
+				third_black_pixel_is_found = false;
+			}
+		}
+	}
+
+	//поиск чёрного пикселя возле белого пикселя
+	ptr = (uchar*) (tempImage->imageData);
+	ptr2 = (uchar*) (tempImage->imageData + tempImage->widthStep);
 	for(int x=0; (x < tempImage->width) && (black_pixel_is_found == false); x++ ) {
 		if (ptr[x] == 255) {
 			for (int i = -1; (i < 2) && (second_black_pixel_is_found == false); i++) {
@@ -578,7 +827,8 @@ bool compareSkelets (Skelet first_skelet, Skelet second_skelet) {
 			ratio.push_back((float) first_skelet.arch.at(i).points.size() / (float) second_skelet.arch.at(i).points.size());
 		}
 		for (int i = 1; (i < ratio.size()) && (is_equal == true); i++) {
-			if (abs(ratio.at(i-1) - ratio.at(i)) > 0.001) {
+			float t = abs(ratio.at(i-1) - ratio.at(i));
+			if (abs(ratio.at(i-1) - ratio.at(i)) > 0.2) {
 				is_equal = false;
 			}
 		}
