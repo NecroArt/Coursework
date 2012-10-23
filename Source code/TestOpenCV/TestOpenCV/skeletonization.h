@@ -1,5 +1,6 @@
 #ifndef SKELETONIZATION_H
 #define SKELETONIZATION_H
+#include <math.h>
 
 using namespace std;
 
@@ -22,25 +23,11 @@ void rotateMask(IplImage *mask1);
 void fileOutput(char *s, IplImage *inputImage);
 void improveImageQuality (IplImage *src, IplImage *dst);
 
-//функция вычисляет вес дуги скелета, который определяется количеством пикселей, из которых состоит дуга
-int getWeightArc (CvPoint startPoint, CvPoint finishPoint);
-
 vector <Skelet> getSkelets(IplImage *image);
 bool findBlackPixelWithOneNeighbor (IplImage *tempImage, int &x_first_black_pixel, int &y_first_black_pixel);
 
 //добавляет 2 точки в вектор, элемент которого - 2 точки
 void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_vertex, int x_neighbor, int y_neighbor);
-
-//сравнивает два скелета и возвращает степень их различия
-bool compareSkelets (Skelet first_skelet, Skelet second_skelet);
-
-//функция для сравнения двух дуг по их длине
-bool isFirstArchBigger (Arch arch1, Arch arch2) { 
-	return (arch1.points.size() > arch2.points.size());
-}
-
-//сортирует дуги скелета по длине в возрастающем порядке
-void sortSkelet(vector <Arch> &Arches);
 
 IplImage *buildSkeleton (IplImage *inputImage) {
 	IplImage *outputImage = cvCreateImage(cvSize(inputImage->width,inputImage->height), IPL_DEPTH_8U, 1);
@@ -189,16 +176,6 @@ void improveImageQuality (IplImage *src, IplImage *dst) {
 	
 	//освобождаем ресурсы
 	cvReleaseImage(&hsv);
-}
-
-int getWeightArc (CvPoint startPoint, CvPoint finishPoint, IplImage *image) {
-	startPoint.x = 0;
-	startPoint.y = 0;
-	finishPoint.x = 0;
-	finishPoint.y = 0;
-	
-	int length = 0;
-	return length;
 }
 
 vector <Skelet> getSkelets(IplImage *image) {
@@ -810,29 +787,4 @@ void addVertexAndPixel (vector <TwoPoints> &current_vector, int x_vertex, int y_
 	current_vector.push_back(newDoublePoint);
 }
 
-void sortSkelet(vector <Arch> &Arches) {
-	sort (Arches.begin(), Arches.end(), isFirstArchBigger);
-}
-#include <math.h>
-bool compareSkelets (Skelet first_skelet, Skelet second_skelet) {
-	bool is_equal = true;
-	sortSkelet(first_skelet.arch);
-	sortSkelet(second_skelet.arch);
-	vector <float> ratio;
-	if (abs((int) first_skelet.arch.size() - (int) second_skelet.arch.size()) > 2) {
-		is_equal = false;
-	}
-	else {
-		for (int i = 0; (i < first_skelet.arch.size()) && (i < second_skelet.arch.size()); i++) {
-			ratio.push_back((float) first_skelet.arch.at(i).points.size() / (float) second_skelet.arch.at(i).points.size());
-		}
-		for (int i = 1; (i < ratio.size()) && (is_equal == true); i++) {
-			float t = abs(ratio.at(i-1) - ratio.at(i));
-			if (abs(ratio.at(i-1) - ratio.at(i)) > 0.2) {
-				is_equal = false;
-			}
-		}
-	}
-	return is_equal;
-}
 #endif //SKELETONIZATION_H
